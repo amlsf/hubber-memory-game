@@ -1,28 +1,8 @@
-// https://team-staging.githubapp.com/api/hubbers
-
-// function hubbersHaveArrived () {
-//   console.log(this.responseText);
-// };
-
-// var gimmeSomeHubbers = new XMLHttpRequest();
-// gimmeSomeHubbers.onload = hubbersHaveArrived;
-// gimmeSomeHubbers.open("get", "Hubber.json", true);
-// gimmeSomeHubbers.send();
-
 var matchingGame = {
 	elapsedTime: 0
 };
 
 matchingGame.deck = []
-
-// Like this https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
-
-Hubbers["hubbers"].sort(shuffle).slice(0,8).map(function(hubber){
-	matchingGame.deck.push(hubber)
-	matchingGame.deck.push(hubber)
-});
-
-console.log(matchingGame.deck)
 
 function shuffle() {
 	return 0.5 - Math.random();
@@ -64,7 +44,7 @@ function removeTookCards() {
 function gameover() {
 	clearInterval(matchingGame.timer);
 	$(".score").html($("#elapsed-time").html());
-	
+
 	var lastScore = localStorage.getItem("last-score");
 	lastScoreObj = JSON.parse(lastScore);
 	if (lastScoreObj == null) {
@@ -78,7 +58,7 @@ function gameover() {
 	$(".last-score").html(minute+":"+second);
 	var savedTime = lastScoreObj.savedTime;
 	$(".saved-time").html(savedTime);
-	
+
 	var currentTime = new Date();
 	var month = currentTime.getMonth() + 1;
 	var day = currentTime.getDate();
@@ -94,11 +74,11 @@ function gameover() {
 		"score": matchingGame.elapsedTime
 	};
 	localStorage.setItem("last-score", JSON.stringify(obj));
-	
+
 	if (lastElapsedTime == 0 || matchingGame.elapsedTime < lastElapsedTime) {
 		$(".ribbon").removeClass("hide");
 	}
-	
+
 	$("#popup").removeClass("hide");
 }
 
@@ -106,53 +86,69 @@ function countTimer() {
 	matchingGame.elapsedTime++;
 	var minute = Math.floor(matchingGame.elapsedTime / 60);
 	var second = matchingGame.elapsedTime % 60;
-	
+
 	if (minute < 10) minute = "0" + minute;
 	if (second < 10) second = "0" + second;
 	$("#elapsed-time").html(minute+":"+second);
 }
 
-// This function is going to auto-update the website with new hubbers per the team api (when we get crosssite request working).
-// Also is this all JQuery, I know this b/c of the $ 
+// This all JQuery, I know this b/c of the $
 
-$(function(){
-	matchingGame.deck.sort(shuffle);
-	for(var i=0;i<15;i++){
-		$('.card:first-child').clone().appendTo('#cards');
-	}
-	$('#cards').children().each(function(index) {
-		$(this).css({
-			'left': ($(this).width() + 15) * (index % 4),
-			'top': ($(this).height() + 15) * Math.floor(index / 4)
+	$(function(){
+
+
+	var Hubbers = {};
+	Hubbers.hubbers = [];
+	var x = 0;
+
+	// get all drake albums
+	$.getJSON( "https://partner.api.beatsmusic.com/v1/api/artists/ar241215/albums?client_id=fj3ca8j47q4tt626qw8ytcas", function( response ) {
+		$.each(response.data, function (key,album) {
+			// get all drake album art
+			album_image = 'https://partner.api.beatsmusic.com/v1/api/albums/'+album.id+'/images/default?client_id=frmxsyg64w6z9qq8e5rb7b69';
+			Hubbers.hubbers[x] = {};
+			Hubbers.hubbers[x].gravatar = album_image;
+			x++;
+
+			console.log(Hubbers);
 		});
 
-		var Hubber = matchingGame.deck.pop();
-		// This is some shit - we are going to dynamically apply css to the card(s). 
-		$(this)
-			.css("background", "#efefef url(" + Hubber.gravatar + ")")
-			.css("background-size", "128px 128px")
-		$(this).attr("data-pattern",Hubber.login);
-		
-		if ($("[data-pattern="+Hubber.login+"] .name").text() == "") {
-			$(this).find(".name").text(Hubber.name);
-		} else {
-			$(this).find(".login").text(Hubber.login);
+		// Like this https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
+
+		Hubbers["hubbers"].sort(shuffle).slice(0,8).map(function(hubber){
+			matchingGame.deck.push(hubber)
+			matchingGame.deck.push(hubber)
+		});
+
+		console.log(matchingGame.deck)
+
+		matchingGame.deck.sort(shuffle);
+
+		for(var i=0;i<15;i++){
+			$('.card:first-child').clone().appendTo('#cards');
 		}
 
-		$(this).click(selectCard);
+		$('#cards').children().each(function(index) {
+			$(this).css({
+				'left': ($(this).width() + 15) * (index % 4),
+				'top': ($(this).height() + 15) * Math.floor(index / 4)
+			});
+
+			var Hubber = matchingGame.deck.pop();
+			// This is some shit - we are going to dynamically apply css to the card(s).
+			$(this)
+			.css("background", "#efefef url(" + Hubber.gravatar + ")")
+			.css("background-size", "128px 128px")
+			$(this).attr("data-pattern",Hubber.login);
+
+			if ($("[data-pattern="+Hubber.login+"] .name").text() == "") {
+				$(this).find(".name").text(Hubber.name);
+			} else {
+				$(this).find(".login").text(Hubber.login);
+			}
+
+			$(this).click(selectCard);
+		});
+		matchingGame.timer = setInterval(countTimer, 1000);
 	});
-	matchingGame.timer = setInterval(countTimer, 1000);
 });
-
-//If built as part of team something like this should work to get the list of hubbers to power the game
-
-// hubbers = []
- 
-// function hubbersLoaded () {
-//   hubbers = JSON.parse(this.responseText)  
-// };
- 
-// var request = new XMLHttpRequest();
-// request.onload = hubbersLoaded;
-// request.open("get", "https://team.githubapp.com/api/hubbers", true);
-// request.send();

@@ -36,7 +36,7 @@
 				</div>
 				<div id="popup-box-content">
 
-					<h1>You Won!</h1>
+					<h2>You Won!</h2>
 					<p>Your Score:</p>
 					<p><span class='score'>13</span></p>
 					<p>
@@ -49,33 +49,8 @@
 			</div>
 		</section>
 
-
-
-
-
-
 		<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
-		<script src="js/beats.js"></script>
 		<script src="js/memory-matching.js"></script>
-		<script>
-		  var Hubbers = {};
-			Hubbers.hubbers = [];
-			var x = 0;
-			$.getJSON( "https://partner.api.beatsmusic.com/v1/api/artists/ar241215/albums?client_id=fj3ca8j47q4tt626qw8ytcas", function( response ) {
-				$.each(response.data, function (key,album) {
-					// document.write('<img src="https://partner.api.beatsmusic.com/v1/api/albums/'+val.id+'/images/default?client_id=frmxsyg64w6z9qq8e5rb7b69"');
-					album_image = '<img src="https://partner.api.beatsmusic.com/v1/api/albums/'+album.id+'/images/default?client_id=frmxsyg64w6z9qq8e5rb7b69"'
 
-					$.each(album.refs.tracks, function (key,track) {
-						Hubbers.hubbers[x] = {};
-						Hubbers.hubbers[x].name = track.display;
-						Hubbers.hubbers[x].gravatar = album_image;
-						x++;
-				  });
-				});
-			console.log(Hubbers);
-
-		});
-		</script>
 	</body>
 </html>
