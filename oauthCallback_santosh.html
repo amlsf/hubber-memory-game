@@ -1,0 +1,31 @@
+
+<script language="javascript">
+    var params = {},
+            queryString = location.hash.substring(1),
+            regex = /([^&=]+)=([^&]*)/g, m;
+
+    if (!queryString) {
+        queryString = location.search.substring(1);
+    }
+
+    while (m = regex.exec(queryString)) {
+        params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+    }
+
+    var successCallback = function () {
+        window.opener.window.setOAuth2AccessToken(params.access_token);
+        window.close();
+        return;
+    }
+
+    var errorCallback = function () {
+        alert("Sorry, there was an error processing the response from the OAuth2 server. Try again later");
+        window.close();
+    }
+
+    if (params.access_token) {
+        window.opener.window.sendImplicitAccessToken(params, errorCallback, successCallback);
+    } else {
+        alert("Sorry, but there was an error during the account authorization process. Either the credentials were not entered correctly, or permission was denied by the account holder. Please try again.");
+    }
+</script>

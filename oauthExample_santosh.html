@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0014)about:internet -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"> 
+    <head>
+        <title>Simple Example</title>
+        <meta name="google" value="notranslate" />         
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <script type="text/javascript" src="http://bam.cdn.beatsmusic.com/bam-1.0.2.min.js"></script>
+    </head>
+    <body>
+    <div id = "form">
+    <input id="login" type="button" value="Login">
+    <input id="pause" type="button" value="Pause">
+    <input name="tr102109381" id="countingstars" type="button" value="Counting Stars">
+    <input name="tr16695483" id="rhcp" type="button" value="Michael Jackson">
+    <input name="tr7171425" id="mj" type="button" value="Red Hot Chilli Peppers">
+    <input name="tr102109381" id="onerepublic" type="button" value="One Republic">
+    </div>
+    <script type="text/javascript">
+    	//var songs = ["tr102109381", "tr16695483", "tr7171425"];
+        var authWindow;
+        var bam = new BeatsAudioManager();
+        var currentTrack;
+        
+        
+
+        bam.on("ready", handleReady);
+        bam.on("error", handleError);
+		
+		function compare(pressedSong){
+    		if(bam.identifier==pressedSong){
+    			var form = document.getElementById("form");
+    			var olddiv = document.getElementById("countingstars");
+    			var newdiv = document.getElementById("onerepublic");
+    			form.removeChild(olddiv);
+    			form.removeChild(newdiv);
+    			bam.stop();
+    		}
+    	else{
+    		currentTrack=null;
+    		bam.stop();
+    	}
+		}
+		
+        function handleReady(value) {
+            //bam_engine.width = 500;
+            //bam_engine.height = 500;
+            bam.clientId = "xpk88krrt7vt77n2ju7yvdr4";
+            bam.authentication = {access_token:"cysfzg8dhjyuuxjw9zjw", user_id:"181868733835247872"};
+            //bam.identifier = "tr102109381";
+            //bam.identifier = "tr95658115";
+            bam.load();
+        };
+
+        function handleError(value) {
+            debug("Error: " + value);
+            switch(value){
+                case "auth":
+                    login.hidden = false;
+                    break;
+            }
+        };
+
+        login.onclick = function () {
+            authWindow = window.open("https://partner.api.beatsmusic.com/oauth2/authorize?"+
+                    "client_id=xpk88krrt7vt77n2ju7yvdr4&scope=umMa&"+
+                    "response_type=token&"+
+                    "redirect_uri=http://localhost/music/oauthCallback.html",
+                    "authpop",'height=400,width=600'
+            );
+            if (window.focus) {authWindow.focus()}
+            return false;
+        };
+        login.hidden = true;
+
+        function setOAuth2AccessToken(token) {
+            bam.authentication = {access_token:token, user_id:"181868733835247872"};
+            //bam.load();
+            login.hidden = true;
+            debug("TOKEN: " + token);
+        };
+
+        function sendImplicitAccessToken(params, errorCallback, successCallback) {
+            if(params.access_token){
+                successCallback();
+            }else{
+                errorCallback();
+            }
+        };
+
+        function debug(value) {
+            console.log(value);
+        };
+		
+		countingstars.onclick = function () {
+		alert(bam.identifier);
+		currentTrack = bam.identifier;
+		alert("Current Track is:"+currentTrack);
+        bam.identifier = "tr102109381";
+        bam.load();
+    	};
+    	
+    	rhcp.onclick = function () {
+    		compare(this.name);
+    	};
+    	
+    	mj.onclick = function () {
+       		compare(this.name);
+    	};
+    	
+    	onerepublic.onclick = function () {
+    		compare(this.name);
+    	};
+		
+		pause.onclick = function () {
+        bam.pause();
+    	};
+    	/*play.onclick = function () {
+        bam.play();
+    	};*/
+    	
+    </script>
+   </body>
+</html>
