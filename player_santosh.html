@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0014)about:internet -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"> 
+    <head>
+        <title>Simple Example</title>
+        <meta name="google" value="notranslate" />         
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <script type="text/javascript" src="http://bam.cdn.beatsmusic.com/bam-1.0.2.min.js"></script>
+
+    </head>
+    <body>
+    <script type="text/javascript">
+        var bam = new BeatsAudioManager();
+
+        bam.on("ready", handleReady);
+        bam.on("error", handleError);
+
+        function handleReady() {
+            bam.clientId = "xpk88krrt7vt77n2ju7yvdr4";
+            bam.authentication = {
+                access_token:"cysfzgfy298dhjyuuxjw9zjw",
+                user_id:"181868733835247872"};
+
+            bam.identifier = "tr26746665";
+            bam.load();
+        };
+
+        function handleError(value) {
+            console.log("Error: " + value);
+        };
+
+    </script>
+   </body>
+</html>
