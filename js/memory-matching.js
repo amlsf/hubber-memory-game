@@ -1,17 +1,60 @@
+// memory-matching.js
+// Aim for clarity, not for cleverness.
+
+// Declare a variable named `matchingGame`.
 var matchingGame = {
+
+	// `elapsedTime` is a property of matchingGame. It is a number.
 	elapsedTime: 0
 };
 
-matchingGame.deck = []
+// `deck` is a property of matchingGame. It is an Array.
+matchingGame.deck = [];
 
+// `shuffle` is a Function.
+// It returns a number.
+// It takes 0.5 and subtracts it from a random number between 0 and 1.
 function shuffle() {
 	return 0.5 - Math.random();
 }
 
+// `selectCard` is a Function.
+// The function SelectCard is also a "conditional."
+
 function selectCard() {
-	if ($(".card-flipped").size() > 1) {
+
+	// Let's just pretend.
+
+	// The days before jQuery ever existed, dark, dark days...
+
+	document.getElementByClass("card-flipped")
+
+
+	// API for an if-statement is this:
+	// if (someConditionIsTrue)
+	// It's gonna evaluate what is within the ().
+
+	var condition = $(".card-flipped").size() > 1;
+
+
+	if (condition) {
+
+		// Q: What is return?
+		// Alyson's A: Return is creating the next action as defined in this condition.
+		// Truth: When you return, you leave.
+		// In geek language, we call an immediate `return` a no-op.
 		return;
 	}
+
+	// Q: What does $(this) do?
+	// Truth: Will give you the jQuery wrapped verision of window
+
+	// Q: What does `this` do?
+	// Truth: The window object
+	// Window is the top object in the console
+
+	console.log(this)
+
 	$(this).addClass("card-flipped");
 	if ($(".card-flipped").size() == 2) {
 		setTimeout(checkPattern,1400);
